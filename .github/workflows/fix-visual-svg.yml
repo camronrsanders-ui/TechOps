@@ -1,0 +1,42 @@
+name: One-time visual SVG source fix
+
+on:
+  push:
+    branches:
+      - feat/visual-hardware-0.4
+
+permissions:
+  contents: write
+
+jobs:
+  patch-svg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/visual-hardware-0.4
+
+      - name: Correct compact M.2 SVG dimensions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('visual-hardware.js')
+          text = p.read_text()
+          old = 'height="${h-66}"'
+          new = 'height="${h-58}"'
+          if old in text:
+              p.write_text(text.replace(old, new))
+          PY
+
+      - name: Commit source correction when needed
+        run: |
+          if git diff --quiet -- visual-hardware.js; then
+            echo "Visual SVG source is already corrected."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add visual-hardware.js
+          git commit -m "fix: correct compact M.2 SVG dimensions"
+          git push origin HEAD:feat/visual-hardware-0.4
