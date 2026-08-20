@@ -4,9 +4,13 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 html = (ROOT / "index.html").read_text()
 css = (ROOT / "styles.css").read_text()
+ux_css = (ROOT / "ux.css").read_text()
 js = (ROOT / "game.js").read_text()
+ux_js = (ROOT / "ux.js").read_text()
 html = html.replace('<link rel="stylesheet" href="styles.css" />', f"<style>{css}</style>")
+html = html.replace('<link rel="stylesheet" href="ux.css" />', f"<style>{ux_css}</style>")
 html = html.replace('<script src="game.js"></script>', f"<script>{js}</script>")
+html = html.replace('<script src="ux.js"></script>', f"<script>{ux_js}</script>")
 
 
 def go(page, x, y):
@@ -23,13 +27,13 @@ def click_text(page, text):
 
 def open_app(page, name):
     page.locator(f'.os-icon[data-app="{name}"]').click()
-    page.wait_for_timeout(50)
+    page.wait_for_timeout(80)
 
 
 def cmd(page, text):
     page.locator("#terminalInput").fill(text)
     page.locator("#terminalInput").press("Enter")
-    page.wait_for_timeout(50)
+    page.wait_for_timeout(80)
 
 
 def ticket(page):
@@ -58,16 +62,73 @@ with sync_playwright() as p:
 
     assert page.title() == "TechOps — First Shift Playtest"
     assert page.evaluate("window.__TECHOPS__.missions.length") == 8
-    page.click("#newGameBtn")
-    page.wait_for_timeout(100)
+    assert page.evaluate("typeof window.__TECHOPS_UX__") == "object"
+    assert page.locator("#learnBtn").is_visible()
 
-    # 1 — Payday Panic
+    page.click("#newGameBtn")
+    page.wait_for_timeout(180)
+
+    # Beginner orientation must appear on a fresh browser profile.
+    assert page.locator("#coachModalBackdrop").is_visible()
+    assert "Welcome to your first IT shift" in page.locator("#coachModalBody").inner_text()
+    page.click("#coachSkip")
+    page.wait_for_timeout(80)
+    assert page.locator("#termsPanel").count() == 1
+    assert page.get_by_role("button", name="DHCP", exact=True).count() >= 1
+
+    # 1 — Payday Panic + realistic Windows behavior
     go(page, 380, 120)
     click_text(page, "Start remote session")
+    assert page.locator("#osStart").is_visible()
+    assert page.locator("#osSearch").is_visible()
+
     open_app(page, "terminal")
+    assert page.locator("#osWindowMin").is_visible()
+    assert page.locator("#osWindowMax").is_visible()
+    assert page.locator("#osWindowClose").is_visible()
+    assert page.locator("#terminalInput").is_visible()
+
+    # Minimize and restore from the taskbar like a normal desktop app.
+    page.click("#osWindowMin")
+    page.wait_for_timeout(50)
+    assert page.locator("#osWindow").evaluate("el => el.classList.contains('minimized')")
+    assert page.locator("#osTaskApp").is_visible()
+    page.click("#osTaskApp")
+    page.wait_for_timeout(50)
+    assert not page.locator("#osWindow").evaluate("el => el.classList.contains('minimized')")
+
+    # Maximize and restore.
+    page.click("#osWindowMax")
+    assert page.locator("#osWindow").evaluate("el => el.classList.contains('maximized')")
+    page.click("#osWindowMax")
+    assert not page.locator("#osWindow").evaluate("el => el.classList.contains('maximized')")
+
+    # The app and terminal command area must stay inside the simulated desktop.
+    win_box = page.locator("#osWindow").bounding_box()
+    desk_box = page.locator(".os-desktop").bounding_box()
+    input_box = page.locator("#terminalInput").bounding_box()
+    assert win_box["y"] >= desk_box["y"] - 1
+    assert win_box["y"] + win_box["height"] <= desk_box["y"] + desk_box["height"] + 2
+    assert input_box["y"] + input_box["height"] <= win_box["y"] + win_box["height"] + 1
+
     cmd(page, "ipconfig")
+    assert "169.254.44.18" in page.locator("#terminalOut").inner_text()
+    page.wait_for_timeout(80)
+    assert page.locator("#coachCard").is_visible()
+    assert "APIPA" in page.locator("#coachCard").inner_text()
+
+    # Command history: Up Arrow should recall the previous command.
+    page.locator("#terminalInput").press("ArrowUp")
+    assert page.locator("#terminalInput").input_value() == "ipconfig"
+    page.locator("#terminalInput").fill("")
+
     cmd(page, "ipconfig /renew")
     cmd(page, "ping 8.8.8.8")
+
+    # Close the app, then reopen another app without leaving Remote Desktop.
+    page.click("#osWindowClose")
+    page.wait_for_timeout(60)
+    assert page.locator("#osWindow").evaluate("el => el.classList.contains('hidden')")
     open_app(page, "browser")
     close_overlay(page)
     go(page, 380, 120)
