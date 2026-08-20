@@ -9,7 +9,7 @@ permissions:
 jobs:
   browser-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 22
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,6 +25,7 @@ jobs:
           if [ -f ux.js ]; then node --check ux.js; fi
           if [ -f lab.js ]; then node --check lab.js; fi
           if [ -f refresh.js ]; then node --check refresh.js; fi
+          if [ -f visual-hardware.js ]; then node --check visual-hardware.js; fi
 
       - name: Install browser test runtime
         run: |
@@ -43,3 +44,7 @@ jobs:
       - name: Run Technician Refresh smoke
         run: |
           if [ -f tests/refresh_mode_test.py ]; then python tests/refresh_mode_test.py; fi
+
+      - name: Run Visual Hardware smoke
+        run: |
+          if [ -f tests/visual_hardware_test.py ]; then python tests/visual_hardware_test.py; fi
