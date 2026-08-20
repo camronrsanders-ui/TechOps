@@ -26,6 +26,7 @@ jobs:
           if [ -f lab.js ]; then node --check lab.js; fi
           if [ -f refresh.js ]; then node --check refresh.js; fi
           if [ -f visual-hardware.js ]; then node --check visual-hardware.js; fi
+          if [ -f visual-hardware-polish.js ]; then node --check visual-hardware-polish.js; fi
 
       - name: Install browser test runtime
         run: |
