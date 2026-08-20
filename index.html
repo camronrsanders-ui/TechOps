@@ -7,13 +7,14 @@
   <meta name="description" content="TechOps is a hands-on browser game for learning CompTIA A+ by working real-feeling IT support incidents." />
   <title>TechOps — First Shift Playtest</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="ux.css" />
 </head>
 <body>
   <div id="app">
     <header class="topbar">
       <button id="brandBtn" class="brand-lockup plain-button" aria-label="TechOps home">
         <span class="brand-mark">T/O</span>
-        <span><strong>TechOps</strong><small>FIRST SHIFT • PLAYTEST 0.2</small></span>
+        <span><strong>TechOps</strong><small>FIRST SHIFT • PLAYTEST 0.2.1</small></span>
       </button>
       <div class="hud" aria-label="Player status">
         <div class="hud-item"><small>LEVEL</small><strong id="levelValue">1</strong></div>
@@ -22,6 +23,7 @@
         <div class="hud-item"><small>READINESS</small><strong id="readyValue">0%</strong></div>
       </div>
       <div class="top-actions">
+        <button id="learnBtn" class="icon-btn coach-launch" title="Learning Center" aria-label="Open Learning Center">?</button>
         <button id="soundBtn" class="icon-btn" title="Sound">🔊</button>
         <button id="menuBtn" class="icon-btn" title="Menu">☰</button>
       </div>
@@ -32,8 +34,8 @@
         <div class="hero-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
         <div class="hero-card">
           <div class="eyebrow">NORTHSTAR SYSTEMS // IT OPERATIONS</div>
-          <h1>You got the job.<br><span>Now survive the shift.</span></h1>
-          <p>TechOps teaches CompTIA A+ by putting you on the floor as a Level 1 technician. Walk to users, investigate systems, run commands, work the bench, recover from bad decisions, and close tickets like the job is real.</p>
+          <h1>You got the job.<br><span>Now learn the job.</span></h1>
+          <p>TechOps teaches CompTIA A+ by putting you on the floor as a Level 1 technician. Walk to users, investigate systems, run commands, work the bench, recover from bad decisions, and close tickets like the job is real. Learning Mode explains new terminology while you work.</p>
           <div class="feature-row">
             <div><strong>8</strong><span>Playable incidents</span></div>
             <div><strong>2</strong><span>A+ V15 cores</span></div>
@@ -99,7 +101,7 @@
       <div class="overlay-window">
         <div class="overlay-head">
           <div><small id="overlayKicker">TECHOPS TOOL</small><h2 id="overlayTitle">Tool</h2></div>
-          <button id="overlayClose" class="icon-btn" aria-label="Close">×</button>
+          <button id="overlayClose" class="icon-btn" aria-label="Exit this tool or remote session">×</button>
         </div>
         <div id="overlayBody" class="overlay-body"></div>
       </div>
@@ -129,12 +131,24 @@
       <div class="os-top"><span>WS-014 • Windows 11 Pro</span><span class="connection-pill">REMOTE SESSION</span></div>
       <div class="os-desktop">
         <div id="osIcons" class="os-icons"></div>
-        <div id="osWindow" class="os-window hidden">
-          <div class="os-window-bar"><strong id="osWindowTitle">App</strong><button id="osWindowClose">×</button></div>
+        <div id="osWindow" class="os-window hidden" role="dialog" aria-label="Windows application">
+          <div id="osWindowBar" class="os-window-bar">
+            <strong id="osWindowTitle">App</strong>
+            <div class="os-window-controls">
+              <button id="osWindowMin" aria-label="Minimize">—</button>
+              <button id="osWindowMax" aria-label="Maximize">□</button>
+              <button id="osWindowClose" class="os-close" aria-label="Close application">×</button>
+            </div>
+          </div>
           <div id="osWindowBody" class="os-window-body"></div>
         </div>
       </div>
-      <div class="os-taskbar"><span class="start-dot">⊞</span><span class="os-search">Search</span><span class="task-spacer"></span><span id="osTime">09:14</span></div>
+      <div class="os-taskbar">
+        <button id="osStart" class="os-start-button" aria-label="Open Start menu">⊞</button>
+        <button id="osSearch" class="os-search-button" aria-label="Search apps">Search</button>
+        <button id="osTaskApp" class="os-task-app hidden" aria-label="Active application"></button>
+        <span class="task-spacer"></span><span id="osTime">09:14</span>
+      </div>
     </div>
   </template>
 
@@ -151,5 +165,6 @@
   </template>
 
   <script src="game.js"></script>
+  <script src="ux.js"></script>
 </body>
 </html>
