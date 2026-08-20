@@ -20,7 +20,9 @@ jobs:
           python-version: '3.12'
 
       - name: Validate JavaScript syntax
-        run: node --check game.js
+        run: |
+          node --check game.js
+          if [ -f ux.js ]; then node --check ux.js; fi
 
       - name: Install browser test runtime
         run: |
