@@ -52,7 +52,6 @@ with serve(ROOT) as url, sync_playwright() as p:
     page.wait_for_timeout(100)
     assert page.locator("#labOverlay").is_visible()
     assert page.get_by_text("TechOps Computer Lab", exact=True).is_visible()
-    assert page.get_by_text("27-Objective Training Matrix", exact=False).count() >= 0
 
     # PC Build Bay: safe handling + full compatible office build + POST.
     go_station(page, "pc-build-bay")
@@ -100,7 +99,7 @@ with serve(ROOT) as url, sync_playwright() as p:
 
     # VM/cloud sandbox + verify resource sliders are usable.
     go_station(page, "vm-cloud-sandbox")
-    page.locator("#vmRam").fill("8")
+    page.locator("#vmRam").evaluate("el => { el.value = '8'; el.dispatchEvent(new Event('input', {bubbles:true})); }")
     assert page.locator("#vmRamVal").inner_text() == "8"
     first_choice(page)
     page.wait_for_timeout(1400)
