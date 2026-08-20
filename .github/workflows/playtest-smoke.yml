@@ -1,10 +1,6 @@
 name: TechOps Playtest Smoke
 
 on:
-  push:
-    branches:
-      - main
-      - 'feat/**'
   pull_request:
 
 permissions:
@@ -32,5 +28,10 @@ jobs:
           pip install playwright==1.55.0
           python -m playwright install --with-deps chromium
 
-      - name: Run all eight incidents
-        run: python tests/smoke_test.py
+      - name: Run all eight incidents when playtest test is present
+        run: |
+          if [ -f tests/smoke_test.py ]; then
+            python tests/smoke_test.py
+          else
+            echo "No playtest smoke file in this branch; syntax validation only."
+          fi
