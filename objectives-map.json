@@ -1,0 +1,23 @@
+{
+  "examSeries": "CompTIA A+ V15",
+  "core1": {
+    "exam": "220-1201",
+    "domains": {
+      "Mobile Devices": 13,
+      "Networking": 23,
+      "Hardware": 25,
+      "Virtualization and Cloud Computing": 11,
+      "Hardware and Network Troubleshooting": 28
+    }
+  },
+  "core2": {
+    "exam": "220-1202",
+    "domains": {
+      "Operating Systems": 28,
+      "Security": 28,
+      "Software Troubleshooting": 23,
+      "Operational Procedures": 21
+    }
+  },
+  "designRule": "Every playable incident must map to one or more current exam concepts while remaining an original scenario rather than reproducing exam questions."
+}
