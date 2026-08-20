@@ -1,5 +1,6 @@
 {
   "examSeries": "CompTIA A+ V15",
+  "build": "First Shift Playtest 0.2",
   "core1": {
     "exam": "220-1201",
     "domains": {
@@ -19,5 +20,16 @@
       "Operational Procedures": 21
     }
   },
-  "designRule": "Every playable incident must map to one or more current exam concepts while remaining an original scenario rather than reproducing exam questions."
+  "missions": [
+    {"id":"INC-001","title":"Payday Panic","mapsTo":["Core 1 Networking","Core 1 Hardware/Network Troubleshooting","Core 2 command-line tools"],"concepts":["DHCP","APIPA","IPv4","gateway","ipconfig","ping","verification","documentation"]},
+    {"id":"INC-002","title":"Heat Death","mapsTo":["Core 1 Hardware","Core 1 Hardware/Network Troubleshooting"],"concepts":["thermal shutdown","CPU cooling","airflow","safe power-down","stress testing"]},
+    {"id":"INC-003","title":"Pop-Up Plague","mapsTo":["Core 2 Security","Core 2 Software Troubleshooting"],"concepts":["malware symptoms","browser redirects","Task Manager","containment","anti-malware","quarantine","verification"]},
+    {"id":"INC-004","title":"POST Mortem","mapsTo":["Core 1 Hardware Troubleshooting","Core 2 Operational Procedures"],"concepts":["POST","RAM seating","ESD","recent changes","verification"]},
+    {"id":"INC-005","title":"Printer From Hell","mapsTo":["Core 1 Printers","Core 1 Hardware/Network Troubleshooting","Core 2 Operating Systems"],"concepts":["print queue","Print Spooler","services","test page","documentation"]},
+    {"id":"INC-006","title":"The Name Game","mapsTo":["Core 1 Networking","Core 1 Hardware/Network Troubleshooting","Core 2 command-line tools"],"concepts":["DNS","ping by IP","nslookup","client configuration","layered verification"]},
+    {"id":"INC-007","title":"Pairing Panic","mapsTo":["Core 1 Mobile Devices","Core 1 Hardware/Network Troubleshooting"],"concepts":["Bluetooth","discoverability","pairing","authentication","functional testing"]},
+    {"id":"INC-008","title":"Ghost in the Copilot","mapsTo":["Core 2 Operational Procedures","Core 2 Security","Core 2 AI fundamentals"],"concepts":["public vs private AI","appropriate use","privacy","hallucinations","accuracy","independent verification"]}
+  ],
+  "coverageNote": "Playtest 0.2 is a training slice, not complete exam coverage. Readiness in the game measures mastery of scenarios included in this campaign only.",
+  "designRule": "Every playable incident maps to current exam concepts while remaining an original scenario rather than reproducing protected exam questions or dumps."
 }

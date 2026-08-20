@@ -2,187 +2,154 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#07111f" />
-  <title>TechOps — First Shift</title>
+  <meta name="description" content="TechOps is a hands-on browser game for learning CompTIA A+ by working real-feeling IT support incidents." />
+  <title>TechOps — First Shift Playtest</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app" class="app-shell">
+  <div id="app">
     <header class="topbar">
-      <div class="brand-lockup">
-        <div class="brand-mark">T/O</div>
-        <div>
-          <div class="brand">TechOps</div>
-          <div class="tagline">First Shift • A+ V15 Training Build</div>
-        </div>
+      <button id="brandBtn" class="brand-lockup plain-button" aria-label="TechOps home">
+        <span class="brand-mark">T/O</span>
+        <span><strong>TechOps</strong><small>FIRST SHIFT • PLAYTEST 0.2</small></span>
+      </button>
+      <div class="hud" aria-label="Player status">
+        <div class="hud-item"><small>LEVEL</small><strong id="levelValue">1</strong></div>
+        <div class="hud-item"><small>XP</small><strong id="xpValue">0</strong></div>
+        <div class="hud-item"><small>REP</small><strong id="repValue">100</strong></div>
+        <div class="hud-item"><small>READINESS</small><strong id="readyValue">0%</strong></div>
       </div>
-      <div class="hud">
-        <div class="hud-pill"><span>LVL</span><strong id="level">1</strong></div>
-        <div class="hud-pill"><span>XP</span><strong id="xp">0</strong></div>
-        <div class="hud-pill"><span>REP</span><strong id="rep">100</strong></div>
-        <div class="hud-pill"><span>CR</span><strong id="credits">250</strong></div>
+      <div class="top-actions">
+        <button id="soundBtn" class="icon-btn" title="Sound">🔊</button>
+        <button id="menuBtn" class="icon-btn" title="Menu">☰</button>
       </div>
     </header>
 
     <main>
       <section id="titleScreen" class="screen title-screen">
+        <div class="hero-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
         <div class="hero-card">
-          <p class="eyebrow">YOU GOT THE JOB.</p>
-          <h1>Welcome to <span>TechOps</span></h1>
-          <p class="hero-copy">You are the newest Level 1 technician at Northstar Systems. Nobody cares what you memorized. They care whether you can fix what breaks.</p>
-          <div class="hero-grid">
-            <div class="hero-stat"><strong>5</strong><span>Playable incidents</span></div>
-            <div class="hero-stat"><strong>2</strong><span>CompTIA A+ cores</span></div>
-            <div class="hero-stat"><strong>0</strong><span>Traditional quizzes</span></div>
+          <div class="eyebrow">NORTHSTAR SYSTEMS // IT OPERATIONS</div>
+          <h1>You got the job.<br><span>Now survive the shift.</span></h1>
+          <p>TechOps teaches CompTIA A+ by putting you on the floor as a Level 1 technician. Walk to users, investigate systems, run commands, work the bench, recover from bad decisions, and close tickets like the job is real.</p>
+          <div class="feature-row">
+            <div><strong>8</strong><span>Playable incidents</span></div>
+            <div><strong>2</strong><span>A+ V15 cores</span></div>
+            <div><strong>0</strong><span>Flashcard rounds</span></div>
           </div>
-          <button id="startGame" class="btn btn-primary btn-large">CLOCK IN</button>
-          <p class="tiny">Build 0.1 • Original scenarios mapped to 220-1201 / 220-1202 concepts</p>
+          <div class="hero-actions">
+            <button id="newGameBtn" class="btn primary xl">CLOCK IN</button>
+            <button id="continueBtn" class="btn ghost xl hidden">CONTINUE SHIFT</button>
+          </div>
+          <p class="micro">Original training scenarios aligned to current CompTIA A+ 220-1201 / 220-1202 objectives. No exam dumps.</p>
         </div>
       </section>
 
       <section id="gameScreen" class="screen game-screen hidden">
-        <div class="game-layout">
-          <aside class="left-rail panel">
-            <div class="panel-title">SHIFT QUEUE</div>
-            <div id="missionList" class="mission-list"></div>
-            <div class="divider"></div>
-            <button id="openMastery" class="btn btn-ghost">Skill Matrix</button>
-            <button id="openMap" class="btn btn-ghost">Office Map</button>
-          </aside>
-
-          <section class="workspace panel">
-            <div class="workspace-head">
-              <div>
-                <div id="missionCode" class="eyebrow">INCIDENT</div>
-                <h2 id="missionTitle">Waiting for ticket...</h2>
-              </div>
-              <div class="incident-meter">
-                <div class="meter-label"><span>INCIDENT RISK</span><span id="riskLabel">0%</span></div>
-                <div class="meter"><div id="riskBar" class="meter-fill"></div></div>
-              </div>
+        <aside id="missionRail" class="mission-rail">
+          <div class="rail-head">
+            <div>
+              <small>ACTIVE SHIFT</small>
+              <strong id="shiftClock">09:00</strong>
             </div>
+            <button id="collapseRail" class="icon-btn">‹</button>
+          </div>
+          <div id="missionQueue" class="mission-queue"></div>
+          <div class="rail-section">
+            <small>ACTIVE TICKET</small>
+            <h2 id="activeTitle">Dispatch</h2>
+            <p id="activeSummary">Walk to the glowing dispatch desk to pick up your first ticket.</p>
+            <div class="risk-line"><span>Incident risk</span><strong id="riskValue">0%</strong></div>
+            <div class="risk-track"><span id="riskBar"></span></div>
+          </div>
+          <div class="rail-section compact">
+            <button id="objectivesBtn" class="btn ghost wide">A+ Skill Matrix</button>
+            <button id="hintBtn" class="btn ghost wide">Tech Assist <span>-20 XP</span></button>
+          </div>
+        </aside>
 
-            <div id="missionBrief" class="mission-brief">
-              <div class="avatar" id="avatar">?</div>
-              <div>
-                <div class="brief-meta"><span id="callerName">Dispatch</span><span id="callerDept">IT Operations</span></div>
-                <p id="callerText">Select an incident from the queue.</p>
-              </div>
-            </div>
+        <section class="world-shell">
+          <canvas id="world" width="1100" height="660" aria-label="Top-down Northstar Systems office"></canvas>
+          <div id="zoneLabel" class="zone-label">HELP DESK</div>
+          <div id="interactionPrompt" class="interaction-prompt hidden"><kbd>E</kbd><span>Interact</span></div>
+          <div id="toast" class="toast hidden" aria-live="polite"></div>
+          <div id="missionBanner" class="mission-banner hidden" aria-live="polite"></div>
+          <div class="controls-hint"><span>MOVE</span><kbd>WASD</kbd><span>or</span><kbd>ARROWS</kbd><span>• INTERACT</span><kbd>E</kbd></div>
+          <div id="mobileControls" class="mobile-controls" aria-label="Touch controls">
+            <button data-move="up">▲</button>
+            <div><button data-move="left">◀</button><button id="mobileInteract">E</button><button data-move="right">▶</button></div>
+            <button data-move="down">▼</button>
+          </div>
+        </section>
 
-            <div class="tabs" role="tablist">
-              <button class="tab active" data-view="desktop">Remote Desktop</button>
-              <button class="tab" data-view="bench">Hardware Bench</button>
-              <button class="tab" data-view="network">Network Closet</button>
-              <button class="tab" data-view="ticket">Ticket Notes</button>
-            </div>
-
-            <div id="desktopView" class="view active-view">
-              <div class="desktop-shell">
-                <div class="desktop-top">
-                  <span>WS-014 • Windows 11 Pro</span>
-                  <span id="desktopStatus">Remote session ready</span>
-                </div>
-                <div class="desktop-canvas">
-                  <div class="desktop-icons">
-                    <button class="desktop-icon" data-app="terminal"><span class="icon-square">›_</span><span>Terminal</span></button>
-                    <button class="desktop-icon" data-app="network"><span class="icon-square">↔</span><span>Network</span></button>
-                    <button class="desktop-icon" data-app="taskmgr"><span class="icon-square">▥</span><span>Task Manager</span></button>
-                    <button class="desktop-icon" data-app="device"><span class="icon-square">⌁</span><span>Device Manager</span></button>
-                    <button class="desktop-icon" data-app="defender"><span class="icon-square">◆</span><span>Security</span></button>
-                    <button class="desktop-icon" data-app="browser"><span class="icon-square">◎</span><span>Browser</span></button>
-                    <button class="desktop-icon" data-app="printer"><span class="icon-square">▣</span><span>Printers</span></button>
-                  </div>
-                  <div id="appWindow" class="app-window hidden" aria-live="polite">
-                    <div class="window-bar"><strong id="windowTitle">App</strong><button id="closeWindow" class="window-close">×</button></div>
-                    <div id="windowBody" class="window-body"></div>
-                  </div>
-                </div>
-                <div class="taskbar"><span>⊞</span><span>Search</span><span class="task-spacer"></span><span id="clock">09:00</span></div>
-              </div>
-            </div>
-
-            <div id="benchView" class="view hidden">
-              <div class="bench-grid">
-                <div class="bench-machine">
-                  <div class="case">
-                    <button class="part cpu" data-part="cpu">CPU / Cooler</button>
-                    <button class="part ram" data-part="ram">RAM</button>
-                    <button class="part gpu" data-part="gpu">GPU</button>
-                    <button class="part storage" data-part="storage">NVMe</button>
-                    <button class="part psu" data-part="psu">PSU</button>
-                    <button class="part fans" data-part="fans">Case Fans</button>
-                  </div>
-                </div>
-                <div class="tool-caddy">
-                  <h3>Bench Tools</h3>
-                  <button class="tool-btn" data-tool="poweroff">Power Down</button>
-                  <button class="tool-btn" data-tool="esd">ESD Strap</button>
-                  <button class="tool-btn" data-tool="reseat">Reseat Selected Part</button>
-                  <button class="tool-btn" data-tool="clean">Clean Cooling</button>
-                  <button class="tool-btn" data-tool="replace">Replace Selected Part</button>
-                  <div id="benchReadout" class="readout">Select a component to inspect it.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="networkView" class="view hidden">
-              <div class="network-room">
-                <div class="rack">
-                  <div class="rack-unit router" data-net="router"><span>EDGE ROUTER</span><span id="routerLights">● ● ● ●</span></div>
-                  <div class="rack-unit switch" data-net="switch"><span>24-PORT SWITCH</span><span id="switchLights">●●●●●●●●</span></div>
-                  <div class="rack-unit patch" data-net="patch"><span>PATCH PANEL</span><span>01–24</span></div>
-                  <div class="rack-unit ap" data-net="ap"><span>WIRELESS AP</span><span>6 GHz / 5 GHz</span></div>
-                </div>
-                <div class="network-tools">
-                  <h3>Network Tools</h3>
-                  <button class="tool-btn" data-nettool="cabletest">Cable Tester</button>
-                  <button class="tool-btn" data-nettool="toner">Toner Probe</button>
-                  <button class="tool-btn" data-nettool="rebootap">Restart AP</button>
-                  <button class="tool-btn" data-nettool="checkdhcp">Check DHCP</button>
-                  <button class="tool-btn" data-nettool="checkvlan">Check VLAN</button>
-                  <div id="networkReadout" class="readout">Rack online. No investigation performed.</div>
-                </div>
-              </div>
-            </div>
-
-            <div id="ticketView" class="view hidden">
-              <div class="ticket-sheet">
-                <label>Problem summary<textarea id="noteSummary" placeholder="What did the user report?"></textarea></label>
-                <label>Root cause<textarea id="noteCause" placeholder="What actually caused it?"></textarea></label>
-                <label>Resolution<textarea id="noteFix" placeholder="What did you do to fix it?"></textarea></label>
-                <label>Verification<textarea id="noteVerify" placeholder="How did you verify the fix?"></textarea></label>
-                <button id="submitTicket" class="btn btn-primary">RESOLVE & CLOSE TICKET</button>
-                <div id="ticketHint" class="tiny">You can close only after the technical fix is complete.</div>
-              </div>
-            </div>
-
-            <div id="actionFeed" class="action-feed" aria-live="polite"></div>
-          </section>
-
-          <aside class="right-rail panel">
-            <div class="panel-title">MISSION OBJECTIVES</div>
-            <div id="objectiveList" class="objective-list"></div>
-            <div class="divider"></div>
-            <div class="panel-title">TECH ASSIST</div>
-            <div id="assistText" class="assist">No active incident.</div>
-            <button id="askAssist" class="btn btn-ghost">Ask for a Hint (-15 XP)</button>
-            <div class="divider"></div>
-            <div class="panel-title">COMPTIA MAP</div>
-            <div id="examTag" class="exam-tag">—</div>
-          </aside>
-        </div>
+        <aside id="objectiveHud" class="objective-hud">
+          <div class="panel-label">MISSION OBJECTIVES</div>
+          <div id="objectiveSteps" class="objective-steps"><p>No active incident.</p></div>
+          <div class="objective-foot">
+            <small id="examDomain">A+ V15</small>
+            <div class="progress-track"><span id="missionProgress"></span></div>
+          </div>
+        </aside>
       </section>
     </main>
 
-    <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
-      <div class="modal-card">
-        <button id="closeModal" class="window-close modal-close">×</button>
-        <div id="modalBody"></div>
+    <div id="overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="overlayTitle">
+      <div class="overlay-window">
+        <div class="overlay-head">
+          <div><small id="overlayKicker">TECHOPS TOOL</small><h2 id="overlayTitle">Tool</h2></div>
+          <button id="overlayClose" class="icon-btn" aria-label="Close">×</button>
+        </div>
+        <div id="overlayBody" class="overlay-body"></div>
       </div>
     </div>
+
+    <div id="dialogue" class="dialogue hidden" role="dialog" aria-modal="true">
+      <div class="dialogue-avatar" id="dialogueAvatar">?</div>
+      <div class="dialogue-copy">
+        <div><strong id="dialogueName">Dispatch</strong><small id="dialogueDept">IT OPERATIONS</small></div>
+        <p id="dialogueText"></p>
+        <div id="dialogueActions" class="dialogue-actions"></div>
+      </div>
+    </div>
+
+    <div id="menuPanel" class="side-panel hidden">
+      <div class="side-panel-head"><div><small>TECHOPS</small><h2>Shift Menu</h2></div><button id="closeMenu" class="icon-btn">×</button></div>
+      <button id="resumeBtn" class="menu-item">Resume shift <span>›</span></button>
+      <button id="matrixMenuBtn" class="menu-item">A+ Skill Matrix <span>›</span></button>
+      <button id="controlsMenuBtn" class="menu-item">Controls & how to play <span>›</span></button>
+      <button id="resetBtn" class="menu-item danger">Reset save <span>↻</span></button>
+      <div class="menu-note">Progress saves locally in this browser.</div>
+    </div>
   </div>
+
+  <template id="desktopTemplate">
+    <div class="os-shell">
+      <div class="os-top"><span>WS-014 • Windows 11 Pro</span><span class="connection-pill">REMOTE SESSION</span></div>
+      <div class="os-desktop">
+        <div id="osIcons" class="os-icons"></div>
+        <div id="osWindow" class="os-window hidden">
+          <div class="os-window-bar"><strong id="osWindowTitle">App</strong><button id="osWindowClose">×</button></div>
+          <div id="osWindowBody" class="os-window-body"></div>
+        </div>
+      </div>
+      <div class="os-taskbar"><span class="start-dot">⊞</span><span class="os-search">Search</span><span class="task-spacer"></span><span id="osTime">09:14</span></div>
+    </div>
+  </template>
+
+  <template id="ticketTemplate">
+    <div class="ticket-form">
+      <div class="ticket-meta" id="ticketMeta"></div>
+      <label>Problem summary<textarea id="ticketSummary" placeholder="What did the user report?"></textarea></label>
+      <label>Root cause<textarea id="ticketCause" placeholder="What caused the issue?"></textarea></label>
+      <label>Resolution<textarea id="ticketFix" placeholder="What did you do?"></textarea></label>
+      <label>Verification<textarea id="ticketVerify" placeholder="How did you prove the fix worked?"></textarea></label>
+      <div id="ticketValidation" class="validation"></div>
+      <button id="closeTicketBtn" class="btn primary wide">RESOLVE & CLOSE TICKET</button>
+    </div>
+  </template>
+
   <script src="game.js"></script>
 </body>
 </html>
