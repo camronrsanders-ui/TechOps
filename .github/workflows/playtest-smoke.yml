@@ -9,7 +9,7 @@ permissions:
 jobs:
   browser-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +24,7 @@ jobs:
           node --check game.js
           if [ -f ux.js ]; then node --check ux.js; fi
           if [ -f lab.js ]; then node --check lab.js; fi
+          if [ -f refresh.js ]; then node --check refresh.js; fi
 
       - name: Install browser test runtime
         run: |
@@ -38,3 +39,7 @@ jobs:
       - name: Run Core 1 Computer Lab smoke
         run: |
           if [ -f tests/core1_lab_test.py ]; then python tests/core1_lab_test.py; fi
+
+      - name: Run Technician Refresh smoke
+        run: |
+          if [ -f tests/refresh_mode_test.py ]; then python tests/refresh_mode_test.py; fi
