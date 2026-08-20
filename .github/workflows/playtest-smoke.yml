@@ -7,9 +7,9 @@ permissions:
   contents: read
 
 jobs:
-  eight-mission-smoke:
+  browser-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,6 +23,7 @@ jobs:
         run: |
           node --check game.js
           if [ -f ux.js ]; then node --check ux.js; fi
+          if [ -f lab.js ]; then node --check lab.js; fi
 
       - name: Install browser test runtime
         run: |
@@ -30,10 +31,10 @@ jobs:
           pip install playwright==1.55.0
           python -m playwright install --with-deps chromium
 
-      - name: Run all eight incidents when playtest test is present
+      - name: Run First Shift campaign smoke
         run: |
-          if [ -f tests/smoke_test.py ]; then
-            python tests/smoke_test.py
-          else
-            echo "No playtest smoke file in this branch; syntax validation only."
-          fi
+          if [ -f tests/smoke_test.py ]; then python tests/smoke_test.py; fi
+
+      - name: Run Core 1 Computer Lab smoke
+        run: |
+          if [ -f tests/core1_lab_test.py ]; then python tests/core1_lab_test.py; fi
