@@ -4,18 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#07111f" />
-  <meta name="description" content="TechOps is a hands-on browser game for learning CompTIA A+ Core 1 through IT support incidents and an unlimited computer lab." />
+  <meta name="description" content="TechOps is a hands-on browser game for learning or refreshing CompTIA A+ Core 1 through IT support incidents, an unlimited computer lab, and technician refresh challenges." />
   <title>TechOps — First Shift Playtest</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="ux.css" />
   <link rel="stylesheet" href="lab.css" />
+  <link rel="stylesheet" href="refresh.css" />
 </head>
 <body>
   <div id="app">
     <header class="topbar">
       <button id="brandBtn" class="brand-lockup plain-button" aria-label="TechOps home">
         <span class="brand-mark">T/O</span>
-        <span><strong>TechOps</strong><small>CORE 1 BUILD • PLAYTEST 0.3</small></span>
+        <span><strong>TechOps</strong><small>CORE 1 BUILD • PLAYTEST 0.3.1</small></span>
       </button>
       <div class="hud" aria-label="Player status">
         <div class="hud-item"><small>LEVEL</small><strong id="levelValue">1</strong></div>
@@ -24,6 +25,7 @@
         <div class="hud-item"><small>SHIFT SKILL</small><strong id="readyValue">0%</strong></div>
       </div>
       <div class="top-actions">
+        <button id="refreshBtn" class="icon-btn" title="Technician Refresh Mode" aria-label="Open Technician Refresh Mode">⚡</button>
         <button id="labBtn" class="icon-btn core1-launch" title="Core 1 Computer Lab" aria-label="Open Core 1 Computer Lab">🖥</button>
         <button id="learnBtn" class="icon-btn coach-launch" title="Learning Center" aria-label="Open Learning Center">?</button>
         <button id="soundBtn" class="icon-btn" title="Sound">🔊</button>
@@ -36,19 +38,20 @@
         <div class="hero-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
         <div class="hero-card">
           <div class="eyebrow">TECHOPS // COMPTIA A+ CORE 1 ACADEMY</div>
-          <h1>You got the job.<br><span>Now build the skills.</span></h1>
-          <p>TechOps turns the current CompTIA A+ Core 1 material into things you can actually do. Work the First Shift story as a Level 1 technician, or enter the Computer Lab anytime to build PCs, cable networks, repair devices, configure printers, provision virtual machines and repeat troubleshooting until it feels natural.</p>
+          <h1>Learn it. Fix it.<br><span>Come back sharp.</span></h1>
+          <p>TechOps supports two real IT paths. New technicians can learn Core 1 from the beginning with guided First Shift missions and the Computer Lab. Working technicians can skip the onboarding and use Technician Refresh for fast skills scans, timed repair-room challenges, targeted drills, and professional content review.</p>
           <div class="feature-row">
             <div><strong>27</strong><span>Core 1 objectives tracked</span></div>
             <div><strong>8</strong><span>repeatable lab stations</span></div>
-            <div><strong>8</strong><span>First Shift incidents</span></div>
+            <div><strong>2</strong><span>learning paths</span></div>
           </div>
           <div class="hero-actions">
-            <button id="newGameBtn" class="btn primary xl">CLOCK IN — STORY</button>
+            <button id="newGameBtn" class="btn primary xl">I'M LEARNING — CLOCK IN</button>
             <button id="titleLabBtn" class="btn ghost xl core1-launch">ENTER COMPUTER LAB</button>
+            <button id="titleRefreshBtn" class="btn ghost xl">I WORK IN IT — REFRESH SKILLS</button>
             <button id="continueBtn" class="btn ghost xl hidden">CONTINUE SHIFT</button>
           </div>
-          <p class="micro">Version 1 is being built around CompTIA A+ Core 1 (220-1201) objectives Version 2.0. Original scenarios only; no exam dumps.</p>
+          <p class="micro">Version 1 is being built around CompTIA A+ Core 1 (220-1201) objectives Version 2.0. Original scenarios only; no exam dumps. Chromebook-style repair tickets are clearly labeled as real-world bonus practice.</p>
         </div>
       </section>
 
@@ -73,6 +76,7 @@
             <button id="objectivesBtn" class="btn ghost wide">Campaign Skill Matrix</button>
             <button id="hintBtn" class="btn ghost wide">Tech Assist <span>-20 XP</span></button>
             <button id="railLabBtn" class="btn ghost wide core1-launch" onclick="window.__TECHOPS_LAB__?.open()">🖥 Core 1 Computer Lab</button>
+            <button id="railRefreshBtn" class="btn ghost wide">⚡ Technician Refresh</button>
           </div>
         </aside>
 
@@ -124,10 +128,11 @@
       <div class="side-panel-head"><div><small>TECHOPS</small><h2>Shift Menu</h2></div><button id="closeMenu" class="icon-btn">×</button></div>
       <button id="resumeBtn" class="menu-item">Resume shift <span>›</span></button>
       <button id="menuLabBtn" class="menu-item">Core 1 Computer Lab <span>🖥</span></button>
+      <button id="menuRefreshBtn" class="menu-item">Technician Refresh <span>⚡</span></button>
       <button id="matrixMenuBtn" class="menu-item">Campaign Skill Matrix <span>›</span></button>
       <button id="controlsMenuBtn" class="menu-item">Controls & how to play <span>›</span></button>
       <button id="resetBtn" class="menu-item danger">Reset save <span>↻</span></button>
-      <div class="menu-note">Story and Computer Lab progress save locally in this browser.</div>
+      <div class="menu-note">Story, Computer Lab, and Technician Refresh progress save locally in this browser.</div>
     </div>
   </div>
 
@@ -172,5 +177,6 @@
   <script src="game.js"></script>
   <script src="ux.js"></script>
   <script src="lab.js"></script>
+  <script src="refresh.js"></script>
 </body>
 </html>
