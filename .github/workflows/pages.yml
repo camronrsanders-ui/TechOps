@@ -28,7 +28,7 @@ jobs:
       - name: Build static playtest artifact
         run: |
           mkdir -p _site
-          cp index.html styles.css ux.css lab.css refresh.css game.js ux.js lab.js refresh.js objectives-map.json core1-curriculum.json README.md _site/
+          cp index.html styles.css ux.css lab.css refresh.css visual-hardware.css game.js ux.js lab.js refresh.js visual-hardware.js objectives-map.json core1-curriculum.json README.md _site/
           touch _site/.nojekyll
 
       - name: Setup Pages
