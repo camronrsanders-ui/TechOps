@@ -52,12 +52,15 @@ with serve(ROOT) as url, sync_playwright() as p:
     # In 0.4 the hardware and cable stations intentionally route to richer visual simulators.
     go_station(page, "pc-build-bay")
     assert page.locator("#visualHardwareOverlay").is_visible()
-    assert page.get_by_text("PC Build Bay 2.0", exact=True).first.is_visible()
+    assert page.locator(".vh-workbench").is_visible()
+    assert page.locator(".vh-mobo-zone").is_visible()
+    assert page.locator('[data-part-id="b650"]').is_visible()
     page.click("#vhClose")
     page.evaluate("window.__TECHOPS_LAB__.open()")
     go_station(page, "cable-wall")
     assert page.locator("#visualHardwareOverlay").is_visible()
-    assert page.get_by_text("Connection Workshop", exact=True).first.is_visible()
+    assert page.locator(".vh-cable-layout").is_visible()
+    assert page.locator("[data-vh-cable]").count() >= 6
     page.click("#vhClose")
     page.evaluate("window.__TECHOPS_LAB__.open()")
 
